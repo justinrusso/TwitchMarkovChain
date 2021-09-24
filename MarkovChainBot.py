@@ -3,7 +3,7 @@ from typing import List, Tuple
 
 from TwitchWebsocket import Message, TwitchWebsocket
 from nltk.tokenize import sent_tokenize
-import socket, time, logging, re, string
+import socket, time, logging, random, re, string
 
 from Settings import Settings, SettingsData
 from Database import Database
@@ -157,6 +157,7 @@ class MarkovChain:
                                 # Reset cooldown if a message was actually generated
                                 self.prev_message_t = time.time()
                         logger.info(sentence)
+                        self.change_color()
                         self.ws.send_message(sentence)
                     else:
                         if not self.db.check_whisper_ignore(m.user):
@@ -479,6 +480,7 @@ class MarkovChain:
                 logger.info(sentence)
                 # Try to send a message. Just log a warning on fail
                 try:
+                    self.change_color()
                     self.ws.send_message(sentence)
                 except socket.OSError as error:
                     logger.warning(f"[OSError: {error}] upon sending automatic generation message. Ignoring.")
@@ -565,6 +567,26 @@ class MarkovChain:
             bool: True if the message contains a link.
         """
         return self.link_regex.search(message)
+
+    def change_color(self) -> None:
+        color = random.choice([
+            "Blue",
+            "BlueViolet",
+            "CadetBlue",
+            "Chocolate",
+            "Coral",
+            "DodgerBlue",
+            "Firebrick",
+            "GoldenRod",
+            "Green",
+            "HotPink",
+            "OrangeRed",
+            "Red",
+            "SeaGreen",
+            "SpringGreen",
+            "YellowGreen"
+        ])
+        self.ws.send_message(f".color {color}")
 
 if __name__ == "__main__":
     MarkovChain()
