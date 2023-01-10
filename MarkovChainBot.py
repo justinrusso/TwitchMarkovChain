@@ -11,6 +11,7 @@ from Timer import LoopingTimer
 from Tokenizer import detokenize, tokenize
 
 from Log import Log
+import constants
 Log(__file__)
 
 logger = logging.getLogger(__name__)
@@ -442,7 +443,7 @@ class MarkovChain:
             blacklist (List[str]): The list of banned words to write.
         """
         logger.debug("Writing Blacklist...")
-        with open("blacklist.txt", "w") as f:
+        with open(constants.get_config_path("blacklist.txt"), "w") as f:
             f.write("\n".join(sorted(blacklist, key=lambda x: len(x), reverse=True)))
         logger.debug("Written Blacklist.")
 
@@ -450,7 +451,7 @@ class MarkovChain:
         """Read blacklist.txt and set `self.blacklist` to the list of banned words."""
         logger.debug("Loading Blacklist...")
         try:
-            with open("blacklist.txt", "r") as f:
+            with open(constants.get_config_path("blacklist.txt"), "r") as f:
                 self.blacklist = [l.replace("\n", "") for l in f.readlines()]
                 logger.debug("Loaded Blacklist.")
         

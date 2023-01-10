@@ -140,13 +140,9 @@ cython_debug/
 # IDE
 .vscode/
 
-# Blacklist
-# This file should be automatically generated at launch if not created already
-blacklist.txt
-
-# Settings
-# This file should be automatically generated at launch if not created already
-settings.json
+# Config
+# Config files should be automatically generated at launch if not created already
+config/
 
 # Database files
 *.db

@@ -1,4 +1,4 @@
-import json, os, logging
+import json, os, logging, constants
 from typing import List
 try:
     from typing import TypedDict
@@ -27,8 +27,8 @@ class SettingsData(TypedDict):
 
 class Settings:
     """ Loads data from settings.json into the bot """
-    
-    PATH = os.path.join(os.getcwd(), "settings.json")
+
+    PATH = constants.get_config_path("settings.json")
     
     DEFAULTS: SettingsData = {
         "Host": "irc.chat.twitch.tv",
@@ -119,7 +119,7 @@ class Settings:
         if "BannedWords" in settings:
             logger.info("Updating Blacklist system to new version...")
             try:
-                with open("blacklist.txt", "r+") as f:
+                with open(constants.get_config_path("blacklist.txt"), "r+") as f:
                     logger.info("Moving Banned Words to the blacklist.txt file...")
                     # Read the data, and split by word or phrase, then add BannedWords
                     banned_list = f.read().split("\n") + settings["BannedWords"]
@@ -132,7 +132,7 @@ class Settings:
                     logger.info("Moved Banned Words to the blacklist.txt file.")
             
             except FileNotFoundError:
-                with open("blacklist.txt", "w") as f:
+                with open(constants.get_config_path("blacklist.txt"), "w") as f:
                     logger.info("Moving Banned Words to a new blacklist.txt file...")
                     # Remove duplicates and sort by length, longest to shortest
                     banned_list = sorted(list(set(settings["BannedWords"])), key=lambda x: len(x), reverse=True)
@@ -152,7 +152,7 @@ class Settings:
         """Converts `settings.txt` to `settings.json`, and adds missing new fields."""
         try:
             # Try to load the old settings.txt file using json.
-            with open("settings.txt", "r") as f:
+            with open(constants.get_config_path("settings.txt"), "r") as f:
                 settings = f.read()
                 data: SettingsData = json.loads(settings)
                 # Add missing fields from Settings.DEFAULT to data
@@ -162,7 +162,7 @@ class Settings:
             with open(Settings.PATH, "w") as f:
                 f.write(json.dumps(corrected_data, indent=4, separators=(",", ": ")))
 
-            os.remove("settings.txt")
+            os.remove(constants.get_config_path("settings.txt"))
 
             logger.info("Updated Settings system to new version. See \"settings.json\" for new fields, and README.md for information on these fields.")
 
