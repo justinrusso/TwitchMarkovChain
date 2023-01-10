@@ -292,6 +292,7 @@ class MarkovChain:
                 # If a message is deleted, its contents will be unlearned
                 # or rather, the "occurances" attribute of each combinations of words in the sentence
                 # is reduced by 5, and deleted if the occurances is now less than 1. 
+                logger.info(f"Unlearning message: {m.message}")
                 self.db.unlearn(m.message)
                 
                 # TODO: Think of some efficient way to check whether it was our message that got deleted.
